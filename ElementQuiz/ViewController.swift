@@ -107,7 +107,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 answerLabel.text = "Correct!"
                 textField.text = ""
             } else {
-                answerLabel.text = "❌"
+                answerLabel.text = "❌\nCorrect Answer: \(elementList[currentElementIndex])"
             }
         case .score:
             answerLabel.text = ""
