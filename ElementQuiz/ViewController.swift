@@ -30,20 +30,37 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func updateFlashCardUI() {
         
         answerLabel.text = "?"
+        
+        //Text field and keyboard
+        textField.isHidden = true
+        textField.resignFirstResponder()
+        //Answer label
         if state == .answer {
             answerLabel.text = elementList[currentElementIndex]
         } else {
             answerLabel.text = "?"
         }
     }
-    
+    //Updates the app's UI in quiz mode
     func updateQuizUI() {
+        textField.isHidden = false
+        //Text Field and Keyboard
+        switch state {
+        case .question: //shows keyboard and cleans text field
+            textField.becomeFirstResponder()
+            textField.text = ""
+        case .answer: //hides keyboard
+            textField.resignFirstResponder()
+        }
+        //Answer Label
         switch state {
         case .question:
             answerLabel.text = ""
         case .answer:
-            if answerIsCorrect{
+            if answerIsCorrect {
                 answerLabel.text = "Correct!"
+                answerIsCorrect = false
+                textField.text = ""
             } else {
                 answerLabel.text = "❌"
             }
@@ -81,9 +98,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    @IBOutlet weak var showAnswerButton: UIButton!
     @IBAction func showAnswer(_ sender: UIButton) {
-        state = .answer
-        checkAnswerInTextField()
+        switch mode {
+        case .flashCard:
+            state = .answer
+        case .quiz:
+            state = .question
+        }
+       
+//      checkAnswerInTextField()
         updateUI()
         
     }
@@ -106,11 +130,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     //Check if TextField contains correct answer and changes answeIsCorrect status
-    func checkAnswerInTextField() {
-        if textField.text?.lowercased() == elementList[currentElementIndex].lowercased() {
-            answerIsCorrect = true
-        }
-    }
+//    func checkAnswerInTextField() {
+//        if textField.text?.lowercased() == elementList[currentElementIndex].lowercased() {
+//            answerIsCorrect = true
+//        }
+//    }
     
     @IBOutlet weak var modeSelector: UISegmentedControl!
     @IBOutlet weak var textField: UITextField!
