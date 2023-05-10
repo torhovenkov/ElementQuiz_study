@@ -42,15 +42,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         case .question:
             answerLabel.text = ""
         case .answer:
-            if answerIsCorrect {
+            if answerIsCorrect{
                 answerLabel.text = "Correct!"
             } else {
                 answerLabel.text = "❌"
             }
         }
     }
-    
+    //Updates UI depends on mode state
     func updateUI(){
+        //Updates image
         let elementName = elementList[currentElementIndex]
         let image = UIImage(named: elementName)
         imageView.image = image
@@ -82,6 +83,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func showAnswer(_ sender: UIButton) {
         state = .answer
+        checkAnswerInTextField()
         updateUI()
         
     }
@@ -101,6 +103,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
         state = .answer
         updateUI()
         return true
+    }
+    
+    //Check if TextField contains correct answer and changes answeIsCorrect status
+    func checkAnswerInTextField() {
+        if textField.text?.lowercased() == elementList[currentElementIndex].lowercased() {
+            answerIsCorrect = true
+        }
     }
     
     @IBOutlet weak var modeSelector: UISegmentedControl!
