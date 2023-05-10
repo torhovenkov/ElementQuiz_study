@@ -20,12 +20,30 @@ class ViewController: UIViewController, UITextFieldDelegate {
     var currentElementIndex = 0
     var mode: Mode = .flashCard {
         didSet {
+            switch mode {
+            case .flashCard: setupFlashCards()
+            case .quiz: setupQuiz()
+            }
             updateUI()
         }
     }
     var state: State = .question
     var answerIsCorrect = false
     var correctAnswerCount = 0
+    
+    //Setup a new flash card session
+    func setupFlashCards() {
+        state = .question
+        currentElementIndex = 0
+    }
+    
+    //Setup a new quiz session
+    func setupQuiz() {
+        state = .question
+        currentElementIndex = 0
+        answerIsCorrect = false
+        correctAnswerCount = 0
+    }
     
     ///Updates the app's UI in flash card mode
     func updateFlashCardUI() {
@@ -65,7 +83,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         case .answer:
             if answerIsCorrect {
                 answerLabel.text = "Correct!"
-                answerIsCorrect = false
                 textField.text = ""
             } else {
                 answerLabel.text = "❌"
@@ -95,6 +112,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func next(_ sender: UIButton) {
         currentElementIndex += 1
+        if mode == .quiz {
+            textField.isEnabled = true
+        }
         if currentElementIndex >= elementList.count {
             currentElementIndex = 0
             if mode == .quiz {
@@ -136,6 +156,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if textFieldContents.lowercased() == elementList[currentElementIndex].lowercased() {
             answerIsCorrect = true
             correctAnswerCount += 1
+            //Disables text editing if answer is correct (will be enabled in next() method)
+            textField.isEnabled = false
         } else {
             answerIsCorrect = false
         }
