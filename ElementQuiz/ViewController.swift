@@ -47,6 +47,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     ///Updates the app's UI in flash card mode
     func updateFlashCardUI() {
+        
+        //buttons
+        showAnswerButton.isHidden = false
+        nextElementButton.isEnabled = true
+        nextElementButton.setTitle("Next Element", for: .normal)
+        
         //Segmented Control
         modeSelector.selectedSegmentIndex = 0
         answerLabel.text = "?"
@@ -63,6 +69,22 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     //Updates the app's UI in quiz mode
     func updateQuizUI() {
+        //buttons
+        showAnswerButton.isHidden = true
+        if currentElementIndex == elementList.count - 1 {
+            nextElementButton.setTitle("Show Result", for: .normal)
+        } else {
+            nextElementButton.setTitle("Next Question", for: .normal)
+        }
+        switch state {
+        case .question:
+            nextElementButton.isEnabled = false
+        case .answer:
+            nextElementButton.isEnabled = true
+        case .score:
+            nextElementButton.isEnabled = false
+        }
+        
         modeSelector.selectedSegmentIndex = 1
         textField.isHidden = false
         //Text Field and Keyboard
@@ -110,6 +132,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     
+    @IBOutlet weak var nextElementButton: UIButton!
     @IBAction func next(_ sender: UIButton) {
         currentElementIndex += 1
         if mode == .quiz {
